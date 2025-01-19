@@ -1,0 +1,157 @@
+.container {
+    background-color: #5d6d7e;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.user-container {
+    position: relative;
+    display: inline-block;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    object-fit: cover;
+}
+
+.online-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    background-color: green;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+
+/* Chat window styles */
+#chatWindow {
+    background-color: #d1cbc9;
+    height: 300px;
+    margin-top: 10px;
+    overflow-y: scroll;
+    padding: 10px;
+    border-radius: 5px;
+}
+.userslist {
+    width: 100%; /* Ensure it takes up full width */
+    border-collapse: collapse; /* Optional: Remove space between table cells */
+    max-height: 300px; /* Adjust to your preferred height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    display: block; /* Make the table block-level so it can have scrolling */
+}
+#messageInput {
+    width: 90%;
+    margin-top: 5px;
+    padding: 10px;
+}
+
+/* Send button positioning */
+.send-btn {
+    margin-top: -46px;
+    padding: 10px;
+    margin-left: 90%;
+}
+
+/* When hovering over .username, apply styles to the next .image td */
+.username:hover {
+    border-radius: 2px;
+    background-color: blue;
+}
+
+/* Apply hover effect to the adjacent td (next sibling) */
+.username:hover + .image {
+    background-color: blue; /* Color on hover for next td */
+}
+
+/* Optional: Add a smooth transition for the background color change */
+td {
+    transition: background-color 0.3s ease;
+}
+
+
+/* notification */
+.notification-bubble {
+    display: inline-block;
+    background-color: red !important; /* Ensure red background is applied */
+    color: white !important; /* Ensure text color is white */
+    border-radius: 50%; /* Circular shape */
+    padding: 5px 10px; /* Padding for the content */
+    font-size: 12px; /* Font size */
+    font-weight: bold; /* Bold text */
+    margin-left: 10px; /* Space to the left of the bubble */
+    text-align: center; /* Center the text */
+    line-height: 1; /* Ensure proper line height */
+}
+
+
+/* new */
+/* Container for messages */
+.message {
+    margin-bottom: 10px; /* Space between messages */
+    display: flex; /* Flexbox for easy alignment */
+    align-items: center; /* Vertically center the content */
+}
+
+/* Styling for both sender and receiver messages */
+.message-text {
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 60%; /* Limit message width */
+    font-size: 14px;
+    word-wrap: break-word; /* Allow long words to break into a new line */
+}
+
+/* Sender's message */
+.message.sender {
+    justify-content: flex-start; /* Align messages to the right */
+}
+
+/* Receiver's message */
+.message.receiver {
+    justify-content: flex-end; /* Align messages to the left */
+}
+
+/* Profile image */
+.imagefile{
+    margin-left: 176px;
+}
+.user-img {
+    border-radius: 50%;
+    width: 20px; /* Adjust size of profile image */
+    height: 20px;
+    margin-right: 8px; /* Space between image and message */
+}
+
+/* Styling for the message bubble */
+.message.sender .message-text {
+    background-color: #007bff; /* Blue background for sender */
+    color: white; /* White text */
+}
+
+.message.receiver .message-text {
+    background-color: #f1f1f1; /* Light gray background for receiver */
+    color: black; /* Black text */
+}
+.message-sender .message-text {
+    background-color: #007bff; /* Blue background for sender */
+    color: white; /* White text */
+}
+
+.message-receiver .message-text {
+    background-color: #f1f1f1; /* Light gray background for receiver */
+    color: black; /* Black text */
+}
+.groupusers {
+    width: 100%; /* Ensure it takes up full width */
+    border-collapse: collapse; /* Optional: Remove space between table cells */
+    max-height: 300px; /* Adjust to your preferred height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    display: block; /* Make the table block-level so it can have scrolling */
+}
+

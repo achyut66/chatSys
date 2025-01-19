@@ -30,6 +30,7 @@
                 Chat With Me
             </div>
             <div class="card-body" style="margin-top: 20px;">
+                <div class="text-center"><img src="image/bot.jpg" style="height: 100px;width:100px;border-radius: 50px;"></div>
                 <form method="post">
                     <label style="color:black;">Username:</label> 
                     <input name="username" id="username" class="form-control" placeholder="Username" required>

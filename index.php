@@ -6,92 +6,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        .container {
-            background-color: #5d6d7e;
-            border-radius: 5px;
-            padding: 20px;
-        }
-
-        .user-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid #ddd;
-            object-fit: cover;
-        }
-
-        .online-indicator {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 15px;
-            height: 15px;
-            background-color: green;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
-
-        /* Chat window styles */
-        #chatWindow {
-            background-color: #f5f5f5;
-            height: 300px;
-            margin-top: 10px;
-            overflow-y: scroll;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        #messageInput {
-            width: 90%;
-            margin-top: 5px;
-            padding: 10px;
-        }
-
-        /* Send button positioning */
-        .send-btn {
-            margin-top: -46px;
-            padding: 10px;
-            margin-left: 90%;
-        }
-
-        .username:hover {
-            border-radius: 2px;
-            background-color: red; /* Color on hover */
-        }
-
-        /* notification */
-        .notification-bubble {
-    position: absolute;
-    top: -5px;
-    left: 25px; /* Adjust this based on the positioning of your username */
-    width: 20px;
-    height: 20px;
-    background-color: red;
-    color: white;
-    border-radius: 50%;
-    font-size: 12px;
-    text-align: center;
-    line-height: 20px;
-}
-
-
-    </style>
 </head>
+<style>
+    .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+            justify-content: center; /* Center modal */
+            align-items: center; /* Center modal */
+        }
 
+        /* Modal content */
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            text-align: center;
+        }
+
+        /* Close button */
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Input field styling */
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Submit button styling */
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Open modal button styling */
+        .open-modal-btn {
+            background-color: #008CBA;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .open-modal-btn:hover {
+            background-color: #007bb5;
+        }
+</style>
 <?php
 include("includes/initialize.php");
 $success_message = get_success_message();
 $user_info = User::getAllUsers();
 $username = User::find_by_id($_SESSION['user_id']);
+$groups = GroupMembers::getGroup();
+// print_r($groups);
 ?>
-
 <body>
     <div class="col-md-12">
         <div class="container">
@@ -109,26 +112,29 @@ $username = User::find_by_id($_SESSION['user_id']);
                 </div>
                 <div class="col-md-6">
                     <div class="text-left" style="font-weight:bold;font-size:22px;color:white;">
-                        <?php echo 'LoggedIn As : '. $username; ?>
+                        <?php echo $username.'<span style=""><img src="image/im.jpg" style="height:50px;width:50px;border-radius:50px;margin-left:10px;"></span>'; ?>
                     </div>
-                    <div class="text-center" style="color:white; font-weight:bold; font-size:20px;">Users List</div>
+                    <div class="text-left" style="color:white; font-weight:bold; font-size:20px;">Users List<span>
+                        <div class="text-left" style="margin-left: 507px;margin-top: -30px;"><button class="btn btn-primary" id="openModalBtn">Create Group</button></div>
+                    </span></div>
                     <hr style="border:2px solid white;">
                     <div class="list-group">
+                    <table class="table table-borderless userslist">
+                        
                     <?php foreach ($user_info as $key => $ui): ?>
-                    <div class="d-flex justify-content-between align-items-center mb-2" style="background-color:darkgray;border-radius:5px;">
-                        <div class="user-info">
-                            <span class="username" data-user-id="<?= $ui['id']; ?>" style="color:white; cursor:pointer;margin-left:8px;">
-                                <?= $ui['username']; ?>
-                            </span>
-                        </div>
-                        <div class="user-container">
-                            <img src="https://via.placeholder.com/150" alt="User Avatar" class="user-avatar">
-                            <div class="online-indicator"></div>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
+                        <tr>
+                        <td class="username" data-user-id="<?= $ui['id']; ?>" style="color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <?= $ui['name'] ?>
+                        </td>
+                        <td class="image" style="text-align: right;">
+                            <img src="image/jp.jpg" class="imagefile" style="width:35px;height:35px;border-radius:50%;">
+                        </td>
+                    </tr>
 
+                    <?php endforeach; ?>
+
+                    </table>
+                </div>
                 </div>
 
                 <div class="col-md-6">
@@ -145,180 +151,88 @@ $username = User::find_by_id($_SESSION['user_id']);
                         <div id="chatheader"></div>
                         <div id="chatWindow"></div>
                         <input type="text" name="message" id="messageInput" class="form-control" placeholder="Type your message...">
+                        <!-- <button onclick="addEmoji()">😊</button> -->
                         <button type="submit" id="sendMessage" style="margin-top: -75px;;" class="btn btn-primary send-btn">Send</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
+    <!-- modal form -->
+    <div id="myModal" class="modal">
+        <!-- Modal Content -->
+        <div class="modal-content">
+            <span class="close" id="closeModalBtn">&times;</span>
+            <form id="modalForm createGroupForm" action="create_group.php" method="post">
+                <!-- <div class="text-center">Users List</div> -->
+                <div class="text-left"><label style="font-weight: bold;">Group Name: </label><input type="text" name="group_name" required></td></div>
+                <table class="table table-bordered table responsive groupusers">
+                    <?php foreach($user_info as $uif):?>
+                    <tbody>
+                        <tr>
+                            <td><?=$uif['name'].'<img src="image/im.jpg" style="border-radius:50px;height:15px;width:15px;">'?></td>
+                            <td><input name="selecteduser[]" type="checkbox" value="<?=$uif['id']?>"></td>
+                        </tr>
+                    </tbody>
+                    <?php endforeach;?>
+                    <tfoot></tfoot>
+                </table>
+                <button type="submit" class="submit-btn" name="submit">Submit</button>
+            </form>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/chat.js"></script>
     <script>
-        $(document).ready(function() {
-            var conn = new WebSocket('ws://localhost:8080'); // WebSocket connection
-            var messageInput = document.getElementById('messageInput');
-            var chatWindow = document.getElementById('chatWindow');
-            var selectedUser = null;
+        // Get modal and buttons
+        var modal = document.getElementById('myModal');
+        var openModalBtn = document.getElementById('openModalBtn');
+        var closeModalBtn = document.getElementById('closeModalBtn');
 
-            // When the WebSocket connection opens
-            conn.onopen = function() {
-                console.log('Connected to the WebSocket server');
-            };
+        // When the user clicks the button, open the modal
+        openModalBtn.onclick = function() {
+            modal.style.display = 'flex';
+        }
 
-            // When a message is received from WebSocket
-            conn.onmessage = function(event) {
-                var messageData = JSON.parse(event.data); // Parse the incoming WebSocket message
-                var messageElement = document.createElement('div');  // Create a new div to hold the message
-            $.ajax({
-                type: "GET",
-                url: "getusername.php",  // Endpoint to get the username by sender_id
-                data: { sender_id: messageData.sender_id },  // Pass sender_id as a GET parameter
-                success: function(data) {
-                    console.log('AJAX Response:', data.username);  // Check the response format
-                    if (data.username) {
-                        var senderName = data.username;
-                        if (messageData.message) {
-                            messageElement.innerHTML = `<strong>${senderName}:</strong> ${messageData.message}`;
-                            if (messageData.sender_id == $("#sender_id").val()) {
-                                messageElement.classList.add('message-sender'); // Sender style
-                                chatWindow.appendChild(messageElement); // Append sender's message
-                                messageElement.style.backgroundColor = '#a9cce3';  // Green background for sender
-                                messageElement.style.textAlign = 'left';  // Align sender's messages to the right
-                                messageElement.style.borderRadius = '3px';  // Align sender's messages to the right
-                            } else {
-                                messageElement.classList.add('message-receiver'); // Receiver style
-                                chatWindow.appendChild(messageElement); // Append receiver's message
-                                messageElement.style.backgroundColor = '#95a5a6';  // Red background for receiver
-                                messageElement.style.marginLeft  = '300px';  // Align receiver's messages to the left
-                                messageElement.style.borderRadius = '3px';  // Align sender's messages to the right
-                            }
-                            // chatWindow.appendChild(messageElement);
-                            chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to bottom of chat
-                        } else {
-                            messageElement.innerHTML = "Error: message data is incomplete";
-                        }
+        // When the user clicks the close button, close the modal
+        closeModalBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        // When the user clicks outside the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        $('#createGroupForm').on('submit', function(event) {
+        event.preventDefault();  // Prevent the page from reloading
+        var formData = $(this).serialize();  // Get the form data
+
+        $.ajax({
+            url: 'index.php',  // Submit to the same page
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // Assuming the response is a JSON object
+                try {
+                    var jsonResponse = JSON.parse(response);
+                    if (jsonResponse.success) {
+                        $('#message').html('<div class="alert alert-success">' + jsonResponse.message + '</div>');
                     } else {
-                        console.error('User not found:', data.error);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX Error:', error);
+                    $('#message').html('<div class="alert alert-danger">' + jsonResponse.message + '</div>');
                 }
-            });
-
-
-            };
-
-            $('.username').on('click', function(event) {
-                event.preventDefault();
-                selectedUser = $(this).data('user-id'); // Get the user ID from the clicked element
-                var selectedUsername = $(this).text(); // Get the username (text) of the clicked element
-
-                $('#chatheader').empty();  // Clear previous chat header
-                $('#chatheader').append('<div style="color:white;font-weight:bold;font-size:22px;">Chatting with ' + selectedUsername + '......</div><hr style="2px solid black;">');
-                $("#receiver_id").val(selectedUser);
-                // get notification 
-                var loggedInUserId = $("#sender_id").val();  // Logged-in user ID from the hidden input
-    
-    // Loop through all the users and check unseen messages for the logged-in user
-    $('.username').each(function() {
-        var selectedUser = $(this).data('user-id');  // Get the user_id from the data attribute
-        
-        // Only check unseen messages for other users (not the logged-in user)
-        if (selectedUser != loggedInUserId) {
-            $.ajax({
-                type: "POST",
-                url: "get_unseen_messages.php",  // Endpoint to get unseen message count
-                data: { sender_id: selectedUser, receiver_id: loggedInUserId },  // Check unseen messages from `selectedUser` to `loggedInUserId`
-                success: function(response) {
-                    var data = JSON.parse(response);  // Parse the JSON response
-                    if (data.unseen_count > 0) {
-                        // If there are unseen messages, show a notification bubble next to the username
-                        var notificationBubble = $('<div class="notification-bubble"></div>');
-                        notificationBubble.text(data.unseen_count);  // Set the count of unseen messages
-                        $(".username[data-user-id='" + selectedUser + "']").after(notificationBubble);  // Append the notification bubble next to the sender's username
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching unseen message count:", error);
-                }
-            });
+            } catch (e) {
+                console.error('Invalid JSON response:', e);
+            }
+        },
+        error: function(xhr, status, error) {
+            $('#message').html('<div class="alert alert-danger">An error occurred while creating the group.</div>');
         }
     });
-                // Fetch chat history
-            $.ajax({
-            type: "POST",
-            url: "mark_messages_as_seen.php", // Endpoint to mark messages as seen
-            data: {
-            sender_id: $("#sender_id").val(),
-            receiver_id: selectedUser
-            },
-            success: function(response) {
-                // Fetch chat history
-                $.ajax({
-                    type: "POST",
-                    url: "fetch_chat_history.php",
-                    data: {
-                        sender_id: $("#sender_id").val(),
-                        receiver_id: selectedUser
-                    },
-                    success: function(response) {
-                        $("#chatWindow").html(response); // Display chat history
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error fetching chat history:", error);
-                    }
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error("Error marking messages as seen:", error);
-            }
-        });
-            });
-
-            // When the chat form is submitted
-            $('#chatForm').on('submit', function(event) {
-                event.preventDefault(); // Prevent form from reloading the page
-
-                var message = messageInput.value.trim();
-                var receiverId = $("#receiver_id").val();
-                var senderId = $("#sender_id").val();
-
-                // Ensure message is not empty and receiver is selected
-                if (message !== '' && receiverId) {
-                    var messageData = {
-                        sender_id: senderId,
-                        receiver_id: receiverId,
-                        message: message
-                    };
-                    conn.send(JSON.stringify(messageData)); // Send via WebSocket
-
-                    // Display message locally after sending
-                    var messageElement = document.createElement('div');
-                    messageElement.innerHTML = `You: ${message}`;  // Correct usage of template literal
-                    messageElement.classList.add('message-sender');
-                    chatWindow.appendChild(messageElement);
-                    chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
-
-
-                    // Save message to the database via AJAX
-                    $.ajax({
-                        type: "POST",
-                        url: "save_message.php",  // PHP script to save message
-                        data: { sender_id: senderId, receiver_id: receiverId, message: message },
-                        success: function(response) {
-                            messageInput.value = '';  // Clear input field
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error saving message:", error);
-                        }
-                    });
-                } else {
-                    console.error("Message or receiver is missing");
-                }
-            });
-        });
+});
     </script>
-</body>
 
+</body>
 </html>

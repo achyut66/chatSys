@@ -33,6 +33,7 @@
                 Chat With Me (Register Here)
             </div>
             <div class="card-body" style="margin-top: 20px;">
+            <div class="text-center"><img src="image/bot.jpg" style="height: 100px;width:100px;border-radius: 50px;"></div>
                 <form id="registerForm" method="post">
                     <label style="color:black;">Fullname:</label> 
                     <input name="name" id="name" class="form-control" placeholder="name" required>
